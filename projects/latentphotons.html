@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8"/>
+<title>Latent Photons</title>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script> 
+
+<style>
+
+body {
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      font-family: 'Georgia', serif;
+      color: #111;
+      line-height: 1.6;
+    }
+
+.project-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+h1 {
+      font-size: 2.4em;
+      margin-bottom: 10px;
+    }
+
+h2 {
+      font-size: 1.3em;
+      color: #777;
+      margin-top: 0;
+      margin-bottom: 40px;
+    }
+
+h3 {
+      font-size: 1.2em;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      border-left: 4px solid #999;
+      padding-left: 12px;
+    }
+
+p {
+      margin-bottom: 20px;
+    }
+
+.project-img {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 30px 0;
+      justify-content: center;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+.project-img img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      flex: 1 1 auto;
+      filter: grayscale(100%) contrast(1.2) brightness(0.9);
+      transition: transform 0.3s, filter 0.3s;
+    }
+
+.project-img img:hover {
+      filter: grayscale(0%) contrast(1.5) brightness(1.2);
+    }
+
+.gallery-img {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 10px;
+      margin: 20px auto;
+      max-width: 900px;
+    }
+
+.gallery-img img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      filter: grayscale(100%) contrast(1.2) brightness(0.9);
+      transition: transform 0.2s, filter 0.2s;
+    }
+
+.gallery-img img:hover {
+      filter: grayscale(0%) contrast(1.5) brightness(1.2);
+    }
+
+.lang-switch {
+      top: 10px;
+      margin: 20px;
+    }
+
+.lang-switch button {
+      font-family: inherit;
+      margin: 0 5px;
+      padding: 5px 10px;
+      background: #eee;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+.lang-switch button:hover {
+      background: #ddd;
+    }
+
+.read-more {
+      color: #666;
+      cursor: pointer;
+      font-style: italic;
+      transition: color 0.3s;
+}
+.read-more:hover {
+      color: #000;
+      text-decoration: underline;
+}
+
+.glossary-container {
+      width: 800px;
+      margin: 0 0 20px 250px;
+      padding-left: 16px;
+      border-left: 3px solid #666;
+      font-size: 0.9em;
+      line-height: 1.2;
+      color: #222;
+}
+.glossary-container h3 {
+      font-weight: bold;
+      margin-bottom: 0.5em;
+}
+.glossary-container ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+}
+.glossary-container li {
+      margin-bottom: 0.4em;
+}
+
+.img-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none;
+  }
+  .img-modal img {
+    max-width: 90%;
+    max-height: 90%;
+    box-shadow: 0 0 20px black;
+  }
+
+footer {
+      margin-top: 80px;
+      padding: 20px;
+      border-top: 1px solid #ddd;
+      font-size: 0.8em;
+      color: #999;
+      text-align: center;
+    }
+
+footer a {
+      color: #666;
+      text-decoration: none;
+    }
+
+footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+</head>
+
+
+
+<body>
+
+  <div id="imgModal" class="img-modal" onclick="this.style.display='none'">
+    <img src="" alt="preview">
+  </div>
+
+<div class="lang-switch">
+<button onclick="setLanguage('en')">EN</button>
+<button onclick="setLanguage('sk')">SK</button>
+<button onclick="setLanguage('ru')">RU</button>
+<button onclick="setLanguage('sa')">SA</button>
+</div>
+
+<!-- Timer at the top right corner -->
+
+<div id="timer" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  z-index: 999;
+  opacity: 0.85;">
+  00:00
+</div>
+
+<!-- Hint icon and box at the bottom left corner -->
+
+<div id="hint-icon" style="
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  background: #111;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+  font-family: monospace;
+  transition: background 0.3s;
+"> ?
+</div>
+
+<div id="hint-box" style="
+  display: none;
+  position: fixed;
+  bottom: 60px;
+  left: 10px;
+  width: 250px;
+  background: #fefefe;
+  border: 1px solid #ccc;
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 0.9em;
+  z-index: 9999;
+  color: #111;
+  font-family: Georgia, serif;
+  line-height: 1.4;
+">
+<p id="hint-text"></p>
+<button onclick="closeHint()" style="
+    margin-top: 10px;
+    background: #eee;
+    border: 1px solid #bbb;
+    padding: 4px 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+  ">Close</button>
+</div>
+
+<!-- Article content consisted of pictures and text -->
+
+<div class="project-container">
+
+<h1 id="title"></h1>
+<h2 id="date"></h2>
+<h3 id="author"></h3>
+
+<p id="description"></p>
+
+<div class="project-img">
+<img alt="Glass Plate 1" src="../img/latentphotons/mirrorcode3.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/mirrorcode3.jpg"/>
+</div>
+
+<h2 id="chapter1"></h2>
+<p id="chapter1Text"></p>
+<div class="project-img">
+<img alt="Glass Plate 1" src="../img/latentphotons/lense.gif"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/chips.jpg"/>
+</div>
+
+<h2 id="chapter2"></h2>
+<p id="chapter2Text"></p>
+<div class="project-img">
+<img alt="Glass Plate 1" src="../img/latentphotons/lense1.gif"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/rainbow.gif"/>
+</div>
+
+<h2 id="chapter3"></h2>
+<p id="chapter3Text"></p>
+<div class="gallery-img">
+<img alt="Glass Plate 1" src="../img/latentphotons/screen2.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/glass3.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/screen4.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/screen3.jpg"/>
+</div>
+<div class="project-img">
+  <img alt="Glass Plate 1" src="../img/latentphotons/100112.jpg"/>
+  </div>
+
+<h2 id="chapter4"></h2>
+<p id="chapter4Text"></p>
+
+<div class="project-img">
+<img alt="Animated GIF" src="../img/latentphotons/ryba2.gif"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/ryba3.gif"/>
+</div>
+</div>
+
+
+<div class="glossary-container">
+
+<!-- Not sure about why the text is always in English -->
+ 
+<h2 
+data-lang-en="Glossary" 
+data-lang-ru="Глоссарий" 
+data-lang-sk="Glosár" 
+data-lang-sa="शब्दावली" 
+id="glossary-title">Glossary
+</h2>
+
+<ul id="glossary-list">
+<li>
+<strong 
+data-lang-en="Daguerreotype" 
+data-lang-ru="Дагеротип" 
+data-lang-sk="Dagerotyp"
+data-lang-sa="डागेरोटाइप">Daguerreotype</strong>: 
+
+<span 
+data-lang-en="An early photographic process using silver-plated copper." 
+data-lang-ru="Ранний фотографический процесс с использованием посеребренной меди." 
+data-lang-sa="प्रारंभिक छायाचित्र प्रक्रिया जिसमें रजत-लेपित तांबा उपयोग होता है।" 
+data-lang-sk="Raný fotografický proces s použitím postriebrenej medi."> An early photographic process using silver-plated copper.
+</span>
+
+</li>
+<li>
+
+<strong 
+data-lang-en="Punctum" 
+data-lang-ru="Пунктум" 
+data-lang-sa="पंक्टम" 
+data-lang-sk="Punctum">Punctum</strong>: 
+        
+<span 
+data-lang-en="A detail in a photograph that emotionally 'pierces' the viewer." 
+data-lang-ru="Деталь на фотографии, которая эмоционально 'пронзает' зрителя." 
+data-lang-sa="छायाचित्र में एक विवरण जो भावनात्मक रूप से दर्शक को 'भेदता' है।" 
+data-lang-sk="Detail na fotografii, ktorý emocionálne 'preniká' diváka."> A detail in a photograph that emotionally 'pierces' the viewer.
+</span>
+
+</li>
+<li>
+
+<strong 
+data-lang-en="Latent Photon" 
+data-lang-ru="Латентный фотон" 
+data-lang-sa="गुप्त फोटोन" 
+data-lang-sk="Latentný fotón">Latent Photon</strong>: 
+
+<span 
+data-lang-en="A theoretical concept of hidden light traces in photographs." 
+data-lang-ru="Теоретическая концепция скрытых следов света в фотографиях." 
+data-lang-sa="छायाचित्रों में छिपे हुए प्रकाश के चिह्नों की सैद्धांतिक अवधारणा।" 
+data-lang-sk="Teoretický koncept skrytých svetelných stôp vo fotografiách."> A theoretical concept of hidden light traces in photographs.
+</span>
+
+</li>
+<li>
+
+<strong 
+data-lang-en="Wormhole" 
+data-lang-ru="Червоточина" 
+data-lang-sa="कृमिरंध्र" 
+data-lang-sk="Červia diera">Wormhole</strong>:
+
+<span 
+data-lang-en="A hypothetical bridge connecting two points in space-time." 
+data-lang-ru="Гипотетический мост, соединяющий две точки в пространстве-времени." 
+data-lang-sa="एक काल-देश में दो बिंदुओं को जोड़ने वाला काल्पनिक पुल।" 
+data-lang-sk="Hypotetický most spájajúci dva body v časopriestore."> A hypothetical bridge connecting two points in space-time.
+</span>
+
+</li>
+</ul>
+
+</div>
+
+<script>
+  function updateGlossaryLanguage(lang) {const glossaryTitle = document.getElementById("glossary-title");
+  glossaryTitle.textContent = glossaryTitle.getAttribute(`data-lang-${lang}`) || glossaryTitle.getAttribute("data-lang-en");
+  const glossaryItems = document.querySelectorAll("#glossary-list li strong, #glossary-list li span");
+  glossaryItems.forEach(item => {item.textContent = item.getAttribute(`data-lang-${lang}`) || item.getAttribute("data-lang-en");}); }
+</script>
+
+<div class="gallery-img">
+<img alt="Glass Plate 1" src="../img/latentphotons/glass1.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/glass.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/glass2.jpg"/>
+<img alt="Glass Plate 1" src="../img/latentphotons/10012.jpg"/>
+</div>
+
+<!-- Final test section consisted of three questions with one correct answer, webcam, and annotation  -->
+
+<div id="final-test" 
+style="
+  text-align: center; 
+  margin-top: 100px; 
+  padding: 20px; 
+  border: 2px solid #ccc; 
+  border-radius: 10px; 
+  background: #fefefe; 
+  max-width: 600px; 
+  margin-left: auto; 
+  margin-right: auto; 
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);">
+
+<h2 data-lang-en="Final Test" 
+data-lang-ru="Финальный тест" 
+data-lang-sk="Záverečný test" 
+style="font-size: 1.5em; color: #333; margin-bottom: 20px;">Final Test
+</h2>
+
+<p 
+data-lang-en="What is the speed of light?" 
+data-lang-ru="Какова скорость света?" 
+data-lang-sk="Aká je rýchlosť svetla?" 
+style="font-size: 1.1em; color: #555; margin-bottom: 20px;">What is the speed of light?
+</p>
+
+<div style="display: flex; justify-content: center; gap: 10px;">
+  <button onclick="handleAnswer('wrong')" 
+  data-lang-en="300 km/s" 
+  data-lang-ru="300 км/с" 
+  data-lang-sk="300 km/s" 
+  style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
+    300 km/s
+  </button>
+  <button onclick="handleAnswer('correct')" 
+  data-lang-en="300,000 km/s" 
+  data-lang-ru="300,000 км/с" 
+  data-lang-sk="300,000 km/s" 
+  style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
+    300,000 km/s
+  </button>
+  <button onclick="handleAnswer('wrong')" 
+  data-lang-en="3,000 km/s" 
+  data-lang-ru="3,000 км/с" 
+  data-lang-sk="3,000 km/s" 
+  style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
+    3,000 km/s
+  </button>
+</div>
+</div>
+
+<!-- I was trying to hide the webcam container until the correct answer was given, so the annotation is from the right side and the webcam from the left, but it was not working cause of the display "none" property. Idk how to fix it! -->
+
+<script>
+  function handleAnswer(answer) {
+    if (answer === 'correct') {document.getElementById('webcam-container').style.display = 'flex';} 
+    else {document.getElementById('webcam-container').style.display = 'none';}} 
+</script>
+
+<!-- Webcam + Annotation -->
+
+<div id="webcam-container" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  border-radius: 15px;
+  background: #000;
+  padding: 20px;
+  text-align: left;
+  width: 90%;
+  max-width: 900px;
+  align-items: center;
+  flex-direction: row;">
+
+  <video id="webcam" autoplay playsinline controls style="
+    width: 100%;
+    max-width: 400px;
+    filter: grayscale(100%) contrast(1.2) brightness(0.9) skew(5deg);
+    transition: filter 0.3s;"></video>
+    
+  <div id="annotation-container" style="
+    flex: 1;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #fff;
+    font-family: Georgia, serif;
+    line-height: 1.4;
+    text-align: center;;
+    background: #111;
+    border: 1px solid #444;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);">
+
+  <p style="margin-top: 0; font-size: 1em;">Annotation</p>
+    
+    <p id="annotation-text" 
+    data-lang-en="This is your webcam feed. Observe the light and its properties."
+    data-lang-ru="Это ваша веб-камера. Наблюдайте за светом и его свойствами."
+    data-lang-sk="Toto je váš webový prenos. Pozorujte svetlo a jeho vlastnosti."
+    style="margin-bottom: 10px;">This is your webcam feed. Observe the light and its properties.
+    </p>
+    
+    <span 
+    data-lang-en="Latent Photons" 
+    data-lang-ru="Латентные Фотоны" 
+    data-lang-sk="Latentné Fotóny" style="font-weight: bold;">Latent Photons</span>
+    
+    <p id="annotation-details" 
+    
+    data-lang-en="‘Latent Photons’ is a fictional concept created as part of my art and research project in the summer semester of 2025. The project masquerades as an academic research paper, compiled from open sources and pseudo-academic logic. Through the format of a fictitious scientific article, I explore how, in the internet age, popular science texts, media and visual cultures shape perceptions of reality - or the logic of its construction - often without sufficient justification.
+    The project is based on my own laboratory experiments, analogue optical distortions and practices such as photography, working with chemistry on glass and manipulating images with non-scientific software: iPhone, 3D scanners, ASCII, Touchdesigner at the edge of credibility. I am interested in how language, visual forms and the structure of information presentation affect trust, memory and the perception of scientific truth.
+    The project questions the boundaries between knowledge and fiction, uncovering the cognitive and sensory mechanisms of perception in digital and analogue hyperreality. The site is programmed by me and stylistically references the interfaces of NASA, the Paris Observatory and other academic platforms. The text itself is inspired by a scientific rhetorical style - with devices of generalisation, slogans and pseudo-poetics typical of popularisation and institutional sources."
+    
+    data-lang-ru="«Латентные фотоны» — вымышленное понятие, созданное в рамках моего художественно-иследовательского проекта в летнем семестре 2025 года. Проект маскируется под научное исследование, составленное на основе открытых источников и псевдоакадемической логики. Через формат фиктивной научной статьи я исследую, как в эпоху интернета научно-популярные тексты, медиа и визуальные культуры формируют представления о реальности — или о логике её конструирования — зачастую без достаточных на то оснований.
+    В основе проекта лежат собственные лабораторные эксперименты, аналоговые оптические искажения и практики, такие как фотография, работа с химией на стекле и манипуляции с изображениями с помощью не научиных программ: айфон,  3Д сканнерами, ASCII, Touchdesigner на грани достоверности. Меня интересует, как язык, визуальные формы и структура подачи информации влияют на доверие, память и восприятие научной истины.
+    Проект ставит под сомнение границы между знанием и вымыслом, вскрывая когнитивные и сенсорные механизмы восприятия в условиях цифровой и аналоговой гиперреальности. Сайт запрограммирован мной и стилистически отсылает к интерфейсам NASA, Парижской обсерватории и другим академическим платформам. Сам текст вдохновлён научным риторическим стилем — с приёмами обобщения, слоганами и псевдопоэтичностью, характерными для популяризаторских и институциональных источников."
+    
+    data-lang-sk="„Latentné fotóny“ je fiktívny koncept vytvorený v rámci môjho umeleckého a výskumného projektu v letnom semestri roku 2025. Projekt sa maskuje ako akademická výskumná práca, zostavená z otvorených zdrojov a pseudoakademickej logiky. Prostredníctvom formátu fiktívneho vedeckého článku skúmam, ako v internetovom veku populárno-vedecké texty, médiá a vizuálne kultúry formujú vnímanie reality - alebo logiku jej konštrukcie - často bez dostatočného zdôvodnenia.
+    Projekt vychádza z mojich vlastných laboratórnych experimentov, analógových optických deformácií a postupov, ako je fotografovanie, práca s chémiou na skle a manipulácia s obrazmi pomocou nevedeckého softvéru: iPhone, 3D skenery, ASCII, Touchdesigner na hranici dôveryhodnosti. Zaujíma ma, ako jazyk, vizuálne formy a štruktúra prezentácie informácií ovplyvňujú dôveru, pamäť a vnímanie vedeckej pravdy.
+    Projekt spochybňuje hranice medzi vedomosťami a fikciou, odhaľuje kognitívne a zmyslové mechanizmy vnímania v digitálnej a analógovej hyperrealite. Stránka je naprogramovaná mnou a štylisticky odkazuje na rozhrania NASA, Parížskeho observatória a iných akademických platforiem. Samotný text je inšpirovaný vedeckým rétorickým štýlom - s prostriedkami zovšeobecňovania, sloganov a pseudopoézie typickými pre popularizačné a inštitucionálne zdroje.">
+    </p>
+    
+    <div style="margin-top: 10px;">
+      <button onclick="changeLanguage('en')" style="margin: 0 5px;">EN</button>
+      <button onclick="changeLanguage('ru')" style="margin: 0 5px;">RU</button>
+      <button onclick="changeLanguage('sk')" style="margin: 0 5px;">SK</button>
+    </div>
+
+    <p style="font-size: 0.85em; font-style: italic; text-align: center; color: #aaa;">:3</p>
+
+  </div>
+</div>
+
+<script>
+  function handleAnswer(answer) {
+    if (answer === 'correct') {document.getElementById('final-test').style.display = 'none'; showWebcamAndAnnotations();} 
+    else {alert("Try again.");}
+  }
+
+  function showWebcamAndAnnotations() {
+  document.getElementById('webcam-container').style.display = 'block';
+  const video = document.getElementById('webcam');
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {navigator.mediaDevices.getUserMedia({ video: true })
+   .then(stream => {video.srcObject = stream;})
+   .catch(err => {console.error("Webcam error:", err);alert("Unable to access webcam.");});} else {alert("Webcam not supported.");}}
+
+  function changeLanguage(lang) {
+  const annotationText = document.getElementById('annotation-text');
+  const annotationDetails = document.getElementById('annotation-details');
+  annotationText.textContent = annotationText.getAttribute(`data-lang-${lang}`) || annotationText.getAttribute('data-lang-en');
+  annotationDetails.textContent = annotationDetails.getAttribute(`data-lang-${lang}`) || annotationDetails.getAttribute('data-lang-en');}
+  
+</script>
+
+<script>
+    const langData = {
+      
+      en: {
+      title: "Hidden Photons: Daguerreotypic Evidence of Elusive Phenomena.",
+      date: "February - May | 2025",
+      description: "Fragment of an internal memorandum from the Paris Observatory (circa 1932 / discovered in 2025)",
+      chapter1: "Chapter 1: Light as Witness",
+      chapter1Text: "In December 1931, in one of the forgotten basements of the astronomical complex on the outskirts of Paris, a sequence of silver-based exposures was discovered. These were daguerreotype plates with no signatures or context. They were stored in a faded wrapper, behind a false panel inscribed with 'Nulla Utilitas,' which translates as 'Without use.' The Paris Observatory, founded in 1667 at the initiative of Louis XIV and the first members of the French Academy of Sciences, remained one of the world's leading centers of astronomical research for centuries. It was here in the 19th century that one of the first global projects, the Carte du Ciel (Map of the Sky), was created, uniting astronomers worldwide in an ambitious attempt to catalog millions of stars using the latest photometric methods of the time. Since 1919, the International Time Bureau (Bureau International de l'Heure), coordinating global time tracking based on astronomical observations, was housed within the observatory. However, by the early 1930s, the Paris Observatory was experiencing difficult times. The global economic depression, the aftermath of World War I, and the technological shift toward radio observations led to reduced funding for traditional optical programs. Many archival data, instruments, and experimental materials were abandoned or sent to basements awaiting better times. It was in one of these storage areas that the mysterious plates were found. Alongside them were charred spectrometer lenses, old records of astronomical observations, and handwritten maps of nebulae attributed to Caroline Herschel, a prominent female astronomer of the 18th century. The images themselves faintly revealed flares, distortions, and fragments of light structures that defied direct interpretation. What exactly prompted the creators of these plates to work in secrecy remains unknown. Perhaps these were the results of experiments deemed too speculative for official science at the time. Or perhaps they were byproducts of lost research that was ahead of its time.",
+      chapter2: "Chapter 2: Imprints of Time in Silver",
+      chapter2Text: "1. Daguerreotypes and the Temporal Dimensions of Memory The study of daguerreotypes, particularly through the lens of modern technology, unveils new horizons in understanding memory and temporality. Much like the collections of Joseph-Nicolas Delisle (1688–1768), whose archives laid the groundwork for numerous astronomical studies, contemporary archival materials may possess layers of complexity previously unanticipated. Delisle, who amassed scientific works during his travels across Germany and Russia, utilized archival documents not merely as informational sources but as instruments for comprehending cosmic phenomena. His contributions exemplify how archival data can be reinterpreted through novel methodologies—a notion especially pertinent in the analysis of antique daguerreotypes. 2. Infrared Imaging and the Revelation of Hidden Patterns In 2024, employing infrared scanning at a wavelength of 960 nm, researchers detected unusual interference patterns on 19th-century daguerreotypes that defied explanation by traditional methods. These patterns fundamentally challenge established notions of time and the materiality of photography. Previously attributed to chemical degradation or improper exposure, such phenomena are now understood to involve intricate interactions between light and matter. This can be interpreted through the concept of latent photons—energy that potentially transcends conventional temporal constraints. Contemporary theories suggest these patterns may be remnants of extraordinary physical processes, such as coronal mass ejections from solar activity or accretion flows around black holes. 3. Temporal Anomalies and Archival Astrophotography Theories positing that these anomalies are linked to time travel present even deeper implications. In this context, one of my works, titled Optical Error, utilized archival images for asteroid observation. By juxtaposing archival photographs with recent observations, recurring optical effects were identified, interpretable as traces left not only by observable objects but also by concealed, possibly temporal, anomalies. These daguerreotypes may not merely capture the reality of their era but could serve as repositories of information pertaining to parallel timelines or phenomena beyond our perception. psi.edu +1 bibnum.obspm.fr +1 4. Photographic Archives as Portals to Temporal Realms Archival images can thus be envisioned as portals, enabling us to peer not only into the past but also to glimpse traces of the future—potential harbingers of events yet to unfold. This perspective redefines photography as an entity capable of preserving not just moments from the past but also latent images of the future, offering novel insights into optics and the very nature of perception. Within this metaphor, photography transforms from a mere temporal snapshot into a tangible imprint of time itself, encapsulating information that cannot be fabricated—only emulated.",
+      chapter3: "Chapter 3: Optical Error: An Asteroid Among Shadows",
+      chapter3Text: "Time, Space, and the Grandfather Paradox One of the most captivating topics emerging from the study of Parisian daguerreotypes and the phenomenon of latent photons concerns the very notions of time, space, and their interrelation. Central to this discussion is the grandfather paradox, which may initially appear philosophical or even absurd, yet it is rooted in fundamental physical theories. The grandfather paradox is a hypothetical scenario where a time traveler goes back in time and prevents an event that led to their own existence. The question arises: how could this be possible if the traveler wouldn't exist to undertake the journey? This paradox, along with the concept of traveling into the past, touches upon deeper questions about the structure of time and space. In Einstein's theory of general relativity, space and time are intertwined into a single entity—spacetime. Regarding time travel, this implies that journeys into the past might be physically possible, albeit with certain constraints. One such constraint is time dilation, also known as the differentiation of spacetime intervals, which can be interpreted as differences in the flow of time at various points in space. Thus, theoretically, objects moving in different parts of the universe at varying speeds might experience different temporal flows. Space If particles of matter and antimatter can only move at the speed of light (if massless) or below it (if massive), the idea of a tachyonic state arises—a hypothetical state with negative energy or imaginary mass, potentially allowing movement exceeding the speed of light. Within modern theoretical physics, this state is not only mathematically justified but also opens new horizons for research. If tachyons indeed exist, faster-than-light travel might become a reality, influencing our understanding of time travel. One of the most thrilling propositions in this context is the theory of wormholes. Wormholes are hypothetical bridges in spacetime that could instantly connect two distant points in the universe, allowing travel between them as through a short tunnel. Within general relativity, wormholes are possible solutions to the equations, but in practice, physical wormholes have yet to be discovered. However, if such a wormhole were found, it would not only confirm Einstein's theory but also impact our understanding of time travel and its feasibility in our universe. modern-physics.org Daguerreotypes and Hidden Geometries Returning to daguerreotypes, even within these theories, not all researchers are convinced. Some believe that such anomalies in other phenomena might be traces of invisible geometry—elements beyond our perception, shadows of objects we cannot directly observe. In this regard, it's intriguing how developments in optics and light theory have influenced these ideas, where genuine objects and their representations can have different, not always obvious, relationships. ScienceDirect There are also those who hold a more skeptical view, considering such phenomena as optical noise, resulting from overloaded photographic emulsions or incorrect exposure. It's hard to rule out errors in the shooting process, especially given that daguerreotypes were not only innovative but also highly sensitive photographic methods for their time. The historical context also plays a significant role. In a rare edition of The Lost Archives of the Paris Observatory (J. Fontaine, 1932), a mysterious Catalog of Non-Stellar Objects is mentioned, compiled after the 1897 flare that damaged the main telescope lens. These data remain unconfirmed, but if they truly existed, they could provide new insights into the observed anomalies in daguerreotypes. Perception and Reality Finally, there's a hypothesis that all this might not just be optical effects or scientific paradoxes, but a hint that we live in an optical simulation—not as in fiction, but in the very essence of our perception of reality. We see the world through the prism of light, and what seems impossible or unreal to us might simply be a manifestation of our limited ability to perceive the true nature of things. The possibility that we cannot fully comprehend or even imagine the nature of time and space raises philosophical questions that remain open for further reflection and research.",
+      chapter4: "Chapter 4: Latent Photons and Visual Events: Through the Prism of Perception",
+      chapter4Text: "Let us imagine that each image is not just a visual representation, but a physical trace that preserves information about the place, time, and angle of view through which light reached the photosensitive material. This makes photography a material directly connected to the physical world. Perhaps it is this connection between the materiality of the image and time itself that holds the key to understanding how time travel may not only be possible, but also accessible for contemplation. Czech philosopher Miroslav Petříček, in his book Thinking Through the Image, argues that encountering an image is an event capable of provoking thought, not just transmitting information. He emphasizes that an image does not merely show; it evokes something. It is more than an illustration and is not just a visual intermediary for an idea; it is a specific way of prompting the mind to reflect on what is depicted. In this context, photography becomes not just a recorder of the moment, but a spatiotemporal object capable of conveying information about events that cannot be faked. A forgery can create a similar appearance, but it will not restore the same physical connection with the original source. For example, old photographs reproduced with modern technologies may appear visually similar to the originals, but they do not contain the same information about how light, atmospheric conditions, and even invisible particles of the surrounding world interacted with the camera at the moment of exposure. Petříček also emphasizes that the language of words and the language of images are closely related, but their material is different: an image or expression cannot simply be translated into words or concepts. An image does not show; it evokes something. It is more than an illustration and is not just a visual intermediary for an idea; it is a specific way of prompting the mind to reflect on what is depicted. Thus, photography, being a material trace of light, opens a paradoxical perception of time. Time in photography is essentially not linear: it does not follow normal chronology but rather has a cyclical or synthetic nature. When we look at photographs taken in the past, we are not merely observing images but begin to explore them as temporal objects that can transport us to the moment of their creation. Modern technologies, using artificial intelligence and 3D visualizations, are capable of creating interactive and dynamic models of images, which allow, for example, the visualization of latent photons—these invisible elements that may be hidden in old photographs. Machine learning technologies and neural networks can construct complex structures of time and space, presenting the possibility that these photons may be traces of events occurring in other epochs or even in parallel realities. Thus, photography not only fixes a moment in time, but also becomes a spatiotemporal object capable of conveying information about events that are unlikely to be faked, since a forgery will not restore the material with which these photons interacted. This opens new horizons in understanding how we perceive time, memory, and time travel through images, which, due to their materiality, can not only send us to other epochs, but also allow us to see those epochs through a perspective that we may not yet fully comprehend.",
+      },
+
+      ru: {
+      title: "Скрытые Фотоны: Дагеротипические доказательства неуловимых явлений.",
+      date: "Февраль - Май | 2025",
+      description: "Фрагмент внутреннего меморандума Парижской обсерватории (около 1932 года / обнаружен в 2025 году)",
+      chapter1: "Глава 1: Свет как свидетель",
+      chapter1Text: "В декабре 1931 года, в одном из забытых подвалов астрономического комплекса на окраине Парижа, была обнаружена последовательность экспозиций на серебряной основе. Это были дагеротипические пластины без подписей и контекста. Они хранились в выцветшей обёртке, за фальшпанелью с надписью «Nulla Utilitas», что в переводе означало «Без пользы». Парижская обсерватория, основанная в 1667 году по инициативе Людовика XIV и первых членов Французской академии наук, на протяжении веков оставалась одним из ведущих мировых центров астрономических исследований. Именно здесь в XIX веке был создан один из первых глобальных проектов — Карта Неба (Carte du Ciel), объединивший астрономов со всего мира в амбициозной попытке каталогизировать миллионы звёзд с помощью новейших тогда фотометрических методов. С 1919 года в стенах обсерватории разместилось Международное бюро времени (Bureau International de l'Heure), координирующее всемирное отслеживание времени по астрономическим наблюдениям. Однако к началу 1930-х годов Парижская обсерватория переживала не лучшие времена. Мировая экономическая депрессия, последствия Первой мировой войны и технологический сдвиг в сторону радионаблюдений привели к сокращению финансирования традиционных оптических программ. Множество архивных данных, инструментов и экспериментальных материалов оказалось заброшено или отправлено в подвалы в ожидании лучшего времени. Именно в одном из таких хранилищ и были найдены загадочные пластины. Наряду с ними обнаружили обугленные линзы спектрометра, старинные записи астрономических наблюдений и рукописные карты туманностей, приписываемые Каролине Гершель — выдающейся женщине-астроному XVIII века. На самих изображениях слабо идентифицировались всполохи, искажения, фрагменты световых структур, не поддающиеся прямой интерпретации. Что именно побудило создателей этих пластин работать без огласки — неизвестно. Возможно, это были результаты экспериментов, признанных тогда слишком спекулятивными для официальной науки. Или же — побочные продукты утраченных исследований, опередивших своё время?",
+      chapter2: "Глава 2: Отпечатки времени в серебре",
+      chapter2Text: "Изучение дагерротипов, особенно с применением современных технологий, открывает новые горизонты в осмыслении памяти и времени. Как в случае с коллекциями Жозефа-Николя Делиля (1688-1768), чьи архивы стали основой для многочисленных астрономических исследований, сегодня архивные материалы могут быть гораздо более многослойными, чем мы могли бы ожидать. Делиль, собравший научные труды в своих путешествиях по Германии и России, использовал архивные документы не только как источники информации, но и как инструменты для понимания происходящих во Вселенной процессов. Своим вкладом он также продемонстрировал, как архивные данные могут быть перепрочитаны с использованием новых методик — что особенно актуально в контексте анализа старинных дагерротипов. В 2024 году, с применением инфракрасного сканирования на длине волны 960 нм, ученые обнаружили на дагерротипах XIX века необычные интерференционные паттерны, которые невозможно было объяснить традиционными методами. Эти паттерны, по сути, нарушают все представления о времени и материальности фотографии. Хотя ранее считалось, что такие явления являются результатом химической деградации или неправильной экспозиции, современные методы анализа открывают гораздо более сложные взаимодействия света и материи. Этот феномен можно интерпретировать через концепцию латентных фотонов — энергии, которая, возможно, преодолевает традиционные ограничения времени. Современные теории предполагают, что эти паттерны могут быть следами необычных физических процессов, таких как корональные выбросы, возникающие в результате солнечной активности, или аккреционные потоки вокруг черных дыр. Однако теории, предполагающие, что эти аномалии связаны с путешествиями во времени, предлагают ещё более глубокие возможности. В рамках этих исследований можно также вспомнить одну из моих работ, под названием Optical Error, в которой использовались архивные снимки для наблюдений за астероидом. Сопоставление архивных изображений с новыми наблюдениями позволило выявить повторяющиеся оптические эффекты, которые можно интерпретировать как следы, оставленные не только наблюдаемыми объектами, но и скрытыми, возможно, временными аномалиями. Может быть, эти дагерротипы не просто зафиксировали реальность того времени, но и оказались хранилищами информации о параллельных временных линиях или неведомых явлениях, находящихся за пределами нашего восприятия. Архивные снимки могут стать своего рода порталами, через которые мы можем не только заглядывать в прошлое, но и видеть следы будущего, возможно, предвестники событий, которые ещё предстоит пережить. Этот взгляд на фотографию как на объект, способный задерживать не только моменты прошлого, но и скрытые образы из будущего, открывает перед нами новые перспективы в понимании как оптики, так и самой природы восприятия. В рамках этой метафоры, фотография превращается не в просто объект, фиксирующий момент времени, а в реальный след, материализованный из самого времени, несущий в себе информацию, которую невозможно просто сделать или подделать — её можно лишь имитировать.",
+      chapter3: "Глава 3: Ошибка зрения: астероид среди теней",
+      chapter3Text: "Одна из самых захватывающих тем, возникающих при исследовании парижских дагерротипов и феномена «латентных фотонов», касается самого понятия времени, пространства и их взаимосвязи. Здесь в центр внимания выходит парадокс дедушки, который на первый взгляд может показаться философским или даже абсурдным, но, на самом деле, он имеет корни в фундаментальных теориях физики. Парадокс дедушки — это гипотетическая ситуация, которая возникает, если путешественник во времени вернется в прошлое и предотвратит событие, которое привело к его собственному существованию. Вопрос: как это может быть возможным, если бы он не существовал для того, чтобы совершить путешествие? Этот парадокс, наряду с идеей путешествий в прошлое, затрагивает более глубокие вопросы о структуре времени и пространства. В теории общей относительности Эйнштейна, пространство и время связаны в нечто единое — пространство-время. Применительно к путешествиям во времени это означает, что на самом деле путешествия в прошлое могут быть физически возможными, но с определёнными ограничениями. Одним из таких ограничений является замедление времени, также известное как дифференциация интервала пространства-времени, что можно интерпретировать как разницу в скорости течения времени в разных точках пространства. Таким образом, теоретически возможно, что объекты, движущиеся в различных частях Вселенной с различными скоростями, могут испытывать «разные» временные потоки. Если частицы материи и антиматерии могут двигаться только со скоростью света (если они безмассовые) или ниже скорости света (если они массивные), то возникает идея тахионного состояния — гипотетического состояния с отрицательной энергией или мнимой массой, которое могло бы позволить движения с превышением скорости света. В рамках современной теоретической физики это состояние не только математически обосновано, но и открывает новые горизонты для исследований. Если бы тахионы действительно существовали, возможно, путешествия со скоростью больше скорости света могли бы стать реальностью, и это могло бы повлиять на концепцию путешествий во времени. Одним из самых захватывающих предложений в контексте этих идей является теория червоточин. Червоточины — это гипотетические «мосты» в пространстве-времени, которые могли бы мгновенно соединять две удаленные точки во Вселенной, позволяя путешествиям между ними, как через короткий туннель. В рамках общей теории относительности червоточины являются возможными решениями уравнений, но на практике физические червоточины до сих пор не были обнаружены. Однако, если такая червоточина будет найдена, это не только подтвердит теорию Эйнштейна, но и может оказать влияние на наше понимание путешествий во времени и их возможности в нашей Вселенной. Однако вёрнемся к дагерротипам. Даже в этих теориях не все исследователи уверены. Некоторые считают, что подобные аномалии других феноменах могут быть следами «невидимой геометрии» — того, что находится за пределами нашего восприятия, тенями от объектов, которых мы не можем напрямую увидеть. В этой связи интересно, как на развитие этих идей повлияли открытия в области оптики и теории света, где подлинные объекты и их отображения могут иметь разные, не всегда очевидные, отношения друг с другом. Есть и те, кто придерживается более скептической точки зрения, считая такие явления оптическим шумом, результатом перегрузки фотографических эмульсий или неправильной экспозиции. Вряд ли можно исключить ошибку в процессе съёмки, особенно с учетом того, что дагерротипы были не только новаторским, но и крайне чувствительным методом фотографирования для своего времени. Исторический контекст также играет важную роль. В редком издании «Потерянные архивы Парижской обсерватории» (Ж. Фонтен, 1932) упоминается загадочный «Каталог внезвёздных объектов», составленный после вспышки 1897 года, которая повредила главную линзу телескопа. Эти данные до сих пор остаются неподтвержденными, но, если бы они действительно существовали, они могли бы дать новое понимание наблюдаемым аномалиям в дагерротипах. И, наконец, существует гипотеза, что все это может быть не просто оптическими эффектами или научными парадоксами, а намеком на то, что мы живем в оптической симуляции — не как в фантастике, но как в самой сути нашего восприятия реальности. Мы видим мир через призму света, и то, что нам кажется невозможным или нереальным, может быть просто проявлением нашей ограниченной способности воспринимать истинную природу вещей. Возможность того, что мы не можем полностью осознать или даже представить природу времени и пространства, создает философские вопросы, которые остаются открытыми для дальнейших размышлений и исследований.",
+      chapter4: "Глава 4: Латентные фотоны и визуальные события: через призму восприятия",
+      chapter4Text: "Представим, что каждое изображение — не просто визуальное отображение, а физический след, сохраняющий информацию о месте, времени и угле зрения, через который свет попадал на фоточувствительный материал. Это делает фотографию материалом, напрямую связанным с физическим миром. Возможно, именно эта связь между материальностью изображения и самим временем является ключом к пониманию того, как путешествия во времени могут быть не только возможны, но и доступны для осмысления. Чешский философ Мирослав Петричек в своей книге «Мышление через образ» утверждает, что встреча с изображением — это событие, способное вызвать мышление, а не просто передать информацию. Он подчеркивает, что изображение не просто показывает; оно вызывает нечто. Это больше, чем иллюстрация, и не является простым визуальным посредником идеи; это специфический способ побуждения ума к размышлению о том, что изображено. В этом контексте фотография становится не просто фиксатором момента, но и пространственно-временным объектом, способным передавать информацию о событиях, которые невозможно подделать. Подделка может создать аналогичный внешний вид, но не восстановит ту самую физическую взаимосвязь с оригинальным источником. Например, старинные фотографии, воспроизведенные с помощью современных технологий, могут быть визуально схожи с оригинальными, но не содержат ту же информацию о том, как свет, атмосферные условия и даже невидимые частицы окружающего мира взаимодействовали с камерой в момент съемки. Петричек также подчеркивает, что язык слов и язык образов тесно связаны, но их материал различен: изображение или выражение не могут быть просто переведены в слова или концепции. Изображение не показывает; оно вызывает нечто. Это больше, чем иллюстрация, и не является простым визуальным посредником идеи; это специфический способ побуждения ума к размышлению о том, что изображено .Таким образом, фотография, будучи материальным следом света, открывает парадоксальное восприятие времени. Время на фотографии, по сути, не линейно: оно не следует за нормальной хронологией, а скорее имеет цикличный или синтетический характер. Когда мы рассматриваем фотографии, сделанные в прошлом, мы не просто наблюдаем за изображениями, а начинаем исследовать их как временной объект, который может «переносить» нас в момент своего создания. Современные технологии, использующие искусственный интеллект и 3D-визуализации, способны создавать интерактивные и динамичные модели изображений, что позволяет, например, визуализировать «латентные фотоны» — эти невидимые элементы, которые, возможно, скрыты в старых снимках. Технологии машинного обучения и нейронных сетей могут построить сложные структуры времени и пространства, представив нам, что эти фотоны могут быть следами событий, происходящих в другие эпохи или даже в параллельных реальностях. Таким образом, фотография не только фиксирует момент времени, но и становится пространственно-временным объектом, способным передавать информацию о событиях, которые вряд ли можно подделать, ведь подделка не восстановит материал, с которым эти фотоны взаимодействовали. Это открывает новые горизонты в понимании того, как мы воспринимаем время, память и путешествия во времени через образы, которые, благодаря своей материальности, могут не только «отправить» нас в другие эпохи, но и позволить нам увидеть эти эпохи через перспективу, которую мы, возможно, ещё не осознаём.",
+      },
+
+      sk: {
+      title: "Skryté Fotóny: Dagerotypické dôkazy nepolapiteľných javov.",
+      date: "Február - Máj | 2025",
+      description: "Fragment interného memoranda Parížskej observatória (okolo roku 1932 / objavené v roku 2025)",
+      chapter1: "Kapitola 1: Svetlo ako svedok",
+      chapter1Text: "V decembri 1931, v jednom zo zabudnutých suterénov astronomického komplexu na okraji Paríža, bola objavená séria expozícií na striebornej báze. Boli to dagerotypické platne bez podpisov a kontextu. Boli uložené vo vyblednutom obale, za falošným panelom s nápisom „Nulla Utilitas“, čo znamená „Bez úžitku“. Parížske observatórium, založené v roku 1667 z iniciatívy Ľudovíta XIV. a prvých členov Francúzskej akadémie vied, zostalo po stáročia jedným z popredných svetových centier astronomického výskumu. Práve tu bol v 19. storočí vytvorený jeden z prvých globálnych projektov — Carte du Ciel (Mapa neba), ktorý spojil astronómov z celého sveta v ambicióznom pokuse katalogizovať milióny hviezd pomocou najnovších fotometrických metód tej doby. Od roku 1919 sa v observatóriu nachádzalo Medzinárodné časové byro (Bureau International de l'Heure), ktoré koordinovalo celosvetové sledovanie času na základe astronomických pozorovaní. Avšak začiatkom 30. rokov 20. storočia zažívalo Parížske observatórium ťažké časy. Svetová hospodárska kríza, následky prvej svetovej vojny a technologický posun k rádiovým pozorovaniam viedli k zníženiu financovania tradičných optických programov. Mnohé archívne údaje, nástroje a experimentálne materiály boli opustené alebo poslané do suterénov, kde čakali na lepšie časy. Práve v jednom z týchto skladov boli nájdené záhadné platne. Vedľa nich boli spálené šošovky spektrometra, staré záznamy astronomických pozorovaní a ručne písané mapy hmlovín pripisované Caroline Herschelovej, významnej astronómke 18. storočia. Samotné obrázky slabo odhaľovali záblesky, skreslenia a fragmenty svetelných štruktúr, ktoré sa nedali priamo interpretovať. Čo presne podnietilo tvorcov týchto platní pracovať v utajení, zostáva neznáme. Možno išlo o výsledky experimentov, ktoré boli v tom čase považované za príliš špekulatívne pre oficiálnu vedu. Alebo to boli vedľajšie produkty strateného výskumu, ktorý predbehol svoju dobu.",
+      chapter2: "Kapitola 2: Odtlačky času v striebre",
+      chapter2Text: "1. Dagerotypy a časové dimenzie pamäti. Štúdium dagerotypov, najmä prostredníctvom moderných technológií, otvára nové obzory v chápaní pamäti a časovosti. Podobne ako zbierky Josepha-Nicolasa Delisla (1688–1768), ktorých archívy sa stali základom mnohých astronomických výskumov, môžu byť dnešné archívne materiály oveľa vrstvenejšie, než by sme očakávali. Delisle, ktorý zhromažďoval vedecké diela počas svojich ciest po Nemecku a Rusku, využíval archívne dokumenty nielen ako zdroje informácií, ale aj ako nástroje na pochopenie procesov vo vesmíre. Jeho príspevok tiež ukazuje, ako možno archívne údaje reinterpretovať pomocou nových metodík – čo je obzvlášť aktuálne v kontexte analýzy starých dagerotypov. 2. Infračervené zobrazovanie a odhalenie skrytých vzorov. V roku 2024 vedci pomocou infračerveného skenovania s vlnovou dĺžkou 960 nm objavili na dagerotypoch z 19. storočia nezvyčajné interferenčné vzory, ktoré nebolo možné vysvetliť tradičnými metódami. Tieto vzory v podstate narúšajú všetky predstavy o čase a materialite fotografie. Hoci sa predtým predpokladalo, že takéto javy sú výsledkom chemickej degradácie alebo nesprávnej expozície, moderné analytické metódy odhaľujú oveľa zložitejšie interakcie svetla a hmoty. Tento fenomén možno interpretovať prostredníctvom konceptu latentných fotónov – energie, ktorá možno prekonáva tradičné časové obmedzenia. Súčasné teórie naznačujú, že tieto vzory môžu byť stopami nezvyčajných fyzikálnych procesov, ako sú koronálne výrony spôsobené slnečnou aktivitou alebo akrečné toky okolo čiernych dier. 3. Časové anomálie a archívna astrofotografia. Teórie, ktoré predpokladajú, že tieto anomálie súvisia s cestovaním v čase, ponúkajú ešte hlbšie možnosti. V rámci týchto výskumov možno spomenúť jednu z mojich prác s názvom Optical Error, v ktorej sa použili archívne snímky na pozorovanie asteroidu. Porovnaním archívnych obrázkov s novými pozorovaniami sa podarilo identifikovať opakujúce sa optické efekty, ktoré možno interpretovať ako stopy zanechané nielen pozorovanými objektmi, ale aj skrytými, možno časovými anomáliami. Možno, že tieto dagerotypy nezachytili len realitu tej doby, ale stali sa aj úložiskami informácií o paralelných časových líniách alebo neznámych javoch, ktoré sa nachádzajú za hranicami nášho vnímania. 4. Fotografické archívy ako portály do časových dimenzií. Archívne snímky sa tak môžu stať akýmisi portálmi, cez ktoré môžeme nielen nahliadnuť do minulosti, ale aj vidieť stopy budúcnosti, možno predzvesti udalostí, ktoré ešte len zažijeme. Tento pohľad na fotografiu ako na objekt, schopný zachytiť nielen momenty minulosti, ale aj skryté obrazy z budúcnosti, otvára pred nami nové perspektívy v chápaní optiky a samotnej povahy vnímania. V rámci tejto metafory sa fotografia mení z obyčajného objektu, ktorý fixuje moment času, na reálnu stopu, materializovanú zo samotného času, nesúcu v sebe informáciu, ktorú nemožno jednoducho vytvoriť alebo sfalšovať – možno ju len napodobniť.",
+      chapter3: "Kapitola 3: Optická chyba: Asteroid medzi tieňmi",
+      chapter3Text: "Čas, priestor a paradox starého otca Jednou z najfascinujúcejších tém, ktoré sa objavujú pri skúmaní parížskych daguerrotypov a fenoménu „latentných fotónov“, je samotný pojem času, priestoru a ich vzájomného prepojenia. V centre pozornosti sa tu ocitá paradox starého otca, ktorý sa na prvý pohľad môže zdať filozofický alebo dokonca absurdný, no v skutočnosti má korene vo fundamentálnych teóriách fyziky. Paradox starého otca je hypotetická situácia, ktorá nastáva, ak sa cestovateľ v čase vráti do minulosti a zabráni udalosti, ktorá viedla k jeho vlastnej existencii. Otázka znie: ako je to možné, ak by neexistoval na to, aby uskutočnil cestu? Tento paradox, spolu s myšlienkou cestovania do minulosti, sa dotýka hlbších otázok o štruktúre času a priestoru. Space +7 timequiver.com +7 arXiv +7 V Einsteinovej teórii všeobecnej relativity sú priestor a čas spojené do jedného celku – časopriestoru. V súvislosti s cestovaním v čase to znamená, že cesty do minulosti môžu byť fyzikálne možné, ale s určitými obmedzeniami. Jedným z takýchto obmedzení je spomalenie času, známe aj ako diferenciácia intervalu časopriestoru, čo možno interpretovať ako rozdiel v rýchlosti plynutia času v rôznych bodoch priestoru. Teoreticky je teda možné, že objekty pohybujúce sa v rôznych častiach vesmíru s rôznymi rýchlosťami môžu zažívať „odlišné“ časové toky. Ak sa častice hmoty a antihmoty môžu pohybovať iba rýchlosťou svetla (ak sú bezhmotné) alebo nižšou rýchlosťou (ak sú hmotné), vzniká myšlienka tachyonového stavu – hypotetického stavu s negatívnou energiou alebo imaginárnou hmotnosťou, ktorý by mohol umožniť pohyb presahujúci rýchlosť svetla. V rámci modernej teoretickej fyziky je tento stav nielen matematicky odôvodnený, ale otvára aj nové obzory pre výskum. Ak by tachyóny skutočne existovali, cestovanie rýchlejšie ako svetlo by sa mohlo stať realitou a mohlo by ovplyvniť koncept cestovania v čase. Jedným z najzaujímavejších návrhov v kontexte týchto myšlienok je teória červích dier. Červie diery sú hypotetické „mosty“ v časopriestore, ktoré by mohli okamžite spojiť dva vzdialené body vo vesmíre, umožňujúc cestovanie medzi nimi ako cez krátky tunel. V rámci všeobecnej teórie relativity sú červie diery možnými riešeniami rovníc, ale v praxi fyzické červie diery zatiaľ neboli objavené. Ak by však takáto červia diera bola nájdená, nielenže by potvrdila Einsteinovu teóriu, ale mohla by ovplyvniť naše chápanie cestovania v čase a jeho možnosti v našom vesmíre. Encyclopedia Britannica +27 WIRED +27 math.ucr.edu +27 Daguerrotypy a skryté geometrie Vráťme sa k daguerrotypom. Aj v týchto teóriách nie sú všetci výskumníci presvedčení. Niektorí sa domnievajú, že podobné anomálie v iných fenoménoch môžu byť stopami „neviditeľnej geometrie“ – toho, čo sa nachádza za hranicami nášho vnímania, tieňmi objektov, ktoré nemôžeme priamo vidieť. V tejto súvislosti je zaujímavé, ako na vývoj týchto myšlienok vplývali objavy v oblasti optiky a teórie svetla, kde skutočné objekty a ich zobrazenia môžu mať rôzne, nie vždy zrejmé, vzťahy. Existujú aj tí, ktorí zastávajú skeptickejší pohľad, považujúc takéto javy za optický šum, výsledok preťaženia fotografických emulzií alebo nesprávnej expozície. Ťažko možno vylúčiť chybu v procese snímania, najmä s ohľadom na to, že daguerrotypy boli nielen novátorskou, ale aj mimoriadne citlivou metódou fotografovania pre svoju dobu. Historický kontext tiež zohráva dôležitú úlohu. V zriedkavom vydaní Stratené archívy Parížskej observatóriá (J. Fontaine, 1932) sa spomína záhadný Katalóg nezveřejnených objektov, zostavený po výbuchu v roku 1897, ktorý poškodil hlavnú šošovku teleskopu. Tieto údaje sú dodnes neoverené, ale ak by naozaj existovali, mohli by poskytnúť nové pohľady na pozorované anomálie v daguerrotypoch. Percepcia a realita A nakoniec, existuje hypotéza, že všetko toto môže byť nielen optickými efektami alebo vedeckými paradoxmi, ale náznakom toho, že žijeme v optickej simulácii – nie ako vo fantasy, ale v samotnej podstate nášho vnímania reality. Vidíme svet cez prizmu svetla, a to, čo sa nám zdá nemožné alebo neskutočné, môže byť len prejavom našej obmedzenej schopnosti vnímať skutočnú podstatu vecí. Možnosť, že nemôžeme úplne pochopiť alebo si dokonca predstaviť povahu času a priestoru, vyvoláva filozofické otázky, ktoré zostávajú otvorené na ďalšie zamyslenie a výskum.",
+      chapter4: "Kapitola 4: Latentné fotóny a vizuálne udalosti: cez prizmu vnímania",
+      chapter4Text: "Predstavme si, že každé obraz je nielen vizuálnym zobrazením, ale fyzickou stopou, ktorá uchováva informácie o mieste, čase a uhle pohľadu, cez ktorý svetlo zasiahlo svetlocitlivý materiál. Týmto sa fotografia stáva materiálom priamo spojeným s fyzickým svetom. Možno práve tento vzťah medzi materialitou obrazu a samotným časom je kľúčom k pochopeniu toho, ako môžu byť cestovanie v čase nielen možné, ale aj prístupné na premýšľanie. Český filozof Miroslav Petříček vo svojej knihe Myslenie cez obraz tvrdí, že stretnutie s obrazom je udalosť, ktorá môže vyvolať myslenie, nie len prenášať informácie. Zdôrazňuje, že obraz neukazuje len; vyvoláva niečo. Je to viac než ilustrácia a nie je len vizuálnym prostredníkom pre myšlienku; je to špecifický spôsob vyzývania mysle k premýšľaniu o tom, čo je zobrazené. V tomto kontexte sa fotografia stáva nielen záznamom okamihu, ale aj priestorovo-časovým objektom schopným prenášať informácie o udalostiach, ktoré nie je možné falšovať. Podvrh môže vytvoriť podobný vzhľad, ale neobnoví rovnaký fyzický vzťah s pôvodným zdrojom. Napríklad staré fotografie reprodukované modernými technológiami môžu vyzerať vizuálne podobne originálom, ale neobsahujú rovnaké informácie o tom, ako svetlo, atmosférické podmienky a dokonca neviditeľné častice okolia interagovali s kamerou v momente expozície. Petříček tiež zdôrazňuje, že jazyk slov a jazyk obrazov sú úzko spojené, ale ich materiál je odlišný: obraz alebo výraz nemôže byť jednoducho preložený do slov alebo konceptov. Obraz neukazuje; vyvoláva niečo. Je to viac než ilustrácia a nie je len vizuálnym prostredníkom pre myšlienku; je to špecifický spôsob vyzývania mysle k premýšľaniu o tom, čo je zobrazené. Tým pádom fotografia, ako materiálna stopa svetla, otvára paradoxné vnímanie času. Čas na fotografii nie je v podstate lineárny: nesleduje normálnu chronológiu, ale skôr má cyklický alebo syntetický charakter. Keď sa pozeráme na fotografie zozbierané v minulosti, nepozorujeme len obrazy, ale začíname ich skúmať ako časové objekty, ktoré nás môžu preniesť do momentu ich vytvorenia. Moderné technológie, využívajúce umelú inteligenciu a 3D vizualizácie, sú schopné vytvárať interaktívne a dynamické modely obrazov, čo umožňuje napríklad vizualizáciu latentných fotónov — týchto neviditeľných prvkov, ktoré môžu byť skryté v starých snímkach. Technológie strojového učenia a neurónových sietí môžu vytvárať zložité štruktúry času a priestoru, predstavujúc možnosť, že tieto fotóny môžu byť stopami udalostí, ktoré sa dejú v iných epochách alebo dokonca v paralelných realitách. Takto fotografia nielenže fixuje moment času, ale stáva sa aj priestorovo-časovým objektom schopným prenášať informácie o udalostiach, ktoré je ťažké falšovať, pretože podvrh neobnoví materiál, s ktorým tieto fotóny interagovali. To otvára nové horizonty v pochopení toho, ako vnímame čas, pamäť a cestovanie v čase prostredníctvom obrazov, ktoré, vďaka svojej materialite, môžu nielen poslať nás do iných epoch, ale aj umožniť nám vidieť tieto epochy cez perspektívu, ktorú možno ešte plne nechápeme.",
+      },
+
+      sa: {
+      title: "गूढ फोटोनः: अदृश्य घटनानां दागेरोटिपिक प्रमाणानि।",
+      date: "फाल्गुन - ज्येष्ठ | 2025",
+      description: "पारिस् वेधशालायाः आन्तरिकस्य ज्ञापनपत्रस्य अंशः (लगभग 1932 / 2025 तमे वर्षे प्राप्यते)",
+      chapter1: "अध्यायः 1: जागरणम्",
+      chapter1Text: "दिसम्बर 1931 तमे वर्षे, पारिसस्य बाह्ये वेधशालायाः जर्जरिते उपतले, चांदीयाणां प्रतिच्छायानां अनुक्रमः प्राप्यते। एषः दागेरोटिपिक् पत्राणि साक्षात् न हस्ताक्षरितानि न च संदर्भितानि। एषः पत्राणि एकस्मिन् पर्णे यत्र ‘Nulla Utilitas’ इति लेखितं अस्ति, तत्र प्राप्यन्ते। पत्राणां समीपे दग्धाः स्पेक्ट्रोमेट्रिकदृष्टिः च हस्तलिखिताः तुमा नक्षत्राणां मानचित्राणि च प्राप्यन्ते। एतेषां चित्राणां मध्ये क्षीणाः प्रकाशवर्णाः विकृतयः च प्रकाशमानानां रचनानां अंशाः च दृश्यन्ते। एतेषां प्रतिच्छायानां रासायनिकविघटनस्य वा दोषपूर्णप्रतिच्छायायाः परिणामः इति मन्यते। किन्तु आधुनिकपद्धतयः - इन्फ्रारेड् दृश्यनं यावत् तरंगीयस्पेक्ट्रल् विश्लेषणं - जटिलानां हस्तक्षेपपद्धतयः दर्शयन्ति। एतेषां प्रतिच्छायानां प्रारम्भिकाः चिह्नाः सन्ति यथा कोरनल् मास् इजेक्शन्स्, ग्राविटेशनल् लेंसिङ्ग, वा आक्रीशनप्रवाहाः - यानि सिद्धान्तानि केवलं दशाब्दानाम् अनन्तरम् आगत्यन्ते।",
+      chapter2: "अध्यायः 2: निर्माणम्",
+      chapter2Text: "2024 तमे वर्षे, 960 नानोमीटर् तरङ्गद्वारे पुनः इन्फ्रारेड् स्कानं कृतम् अस्ति यत्र सूक्ष्माणां जटिलानां हस्तक्षेपपद्धतयः प्रकटिताः। एते ‘गूढ फोटोनः’ इति ज्ञायते, यः प्रतिच्छायायाः समयातीतः - सम्भवतस्तु अभिप्रायातीतः। केवलं प्राचीनाः क्रिप्टोग्राफरः वा माध्यमाः यः ‘भूतानां’ प्रतिच्छायायाम् उपविष्टाः सन्ति, एषः तस्मिन् सह कार्यं कर्तुं शक्नुवन्ति। केचन मन्यन्ते यः अदृश्यगणितस्य चिह्नानि - यानि वस्तूनां छायाः यानि इन्द्रियपरिस्पर्शस्य परिधिं अतिक्रमन्ति। अन्ये तु मन्यन्ते यः उपहासाः, अप्टिकल् नॉइज्, अनुकरणानि, वा प्रतिच्छायायाः अधिभारस्य परिणामाः सन्ति।",
+      chapter3: "अध्यायः 3: उद्भवः",
+      chapter3Text: "किन्तु कदाचित् एषः अधिकं प्रकटयति: यः अभिप्रायः यः वयं अप्टिकल् अनुकरणे वसामः - न विज्ञानकथायाः अर्थे, किन्तु दृश्यतायाः तर्के। प्रकाशः यः वास्तविकतायाः संरचनात्मकः एजेन्ट् अस्ति - एषः विषयः यः 17 शताब्दे ह्यूजन्स् च न्यूटनस्य सह वैज्ञानिकैः उपविष्टः अस्ति। प्रकाशस्य सिद्धान्ते (हेल्महोल्ट्ज्), प्रकाशः केवलं चित्राणां वाहकः न, किन्तु तरंगीयसंभाव्यतायाः हस्तक्षेपस्य, सुपरपोजिशनस्य, च लुप्तत्वस्य। प्रतिच्छाया, एष्यां सन्दर्भे, प्रतिच्छायायाः परिणामं न, किन्तु कालपरतयाः सह सम्पर्कस्य चिह्नं अस्ति। एषः अतीतानां दृष्टिं संग्रहालयात् संभाव्यगहणं प्रति परिवर्तयति यः एकस्मिन् गहणं इव प्रतिच्छायायाम् उपविष्टम् अस्ति।",
+      chapter4: "अध्यायः 4: परावर्तनम्",
+      chapter4Text: "वॉल्टर बेंजामिनस्य लेखनस्य आरम्भे, वयं प्रश्नं गृहीतुम् उपविष्टाः - कीदृशः प्रतिच्छाया वास्तविकतायाः चिह्नं अस्ति वा तस्य प्रक्षिप्तिः? हेल्मुट् गेरनशाइमः उल्लेखितवान् यः प्राचीनाः प्रतिच्छायाः वस्तूनां उपविष्टाः सन्ति, किन्तु प्रतिच्छायाः वस्तूनां उपविष्टाः सन्ति - न किञ्चिद् स्मृतिः किन्तु स्वयं स्मृतिः वस्तुत्वेन। एषः प्रतिच्छाया तस्मिन् अर्थे प्रमाणं न, किन्तु विघटनं अस्ति। भविष्यस्य अभिज्ञानम्। अनुकरणं यः सिद्धान्तं पूर्वं आगत्यन्ति। एतेषां चांदीयपत्राणां सह अपि: वयं एषः संग्रहालयः इति वदामः, किन्तु एषः यः अद्यापि न घटितम् अस्ति इति दृष्यते। अथवा, यथा सुसान् सोंटाग् लिखति, “प्रतिच्छाया भूतानां इव दुष्कृत्यं अस्ति।”",
+      }
+    };
+
+// Function to set the language and update the text content
+    function setLanguage(lang) {
+      const data = langData[lang];
+      document.getElementById("title").textContent = data.title;
+      document.getElementById("date").textContent = data.date;
+      document.getElementById("description").textContent = data.description;
+      document.getElementById("chapter1").textContent = data.chapter1;
+      document.getElementById("chapter1Text").textContent = data.chapter1Text;
+      document.getElementById("chapter2").textContent = data.chapter2;
+      document.getElementById("chapter2Text").textContent = data.chapter2Text;
+      document.getElementById("chapter3").textContent = data.chapter3;
+      document.getElementById("chapter3Text").textContent = data.chapter3Text;
+      document.getElementById("chapter4").textContent = data.chapter4;
+      document.getElementById("chapter4Text").textContent = data.chapter4Text;
+      localStorage.setItem("preferredLanguage", lang);}
+      window.onload = function () {const savedLang = localStorage.getItem("preferredLanguage") || "en";
+      setLanguage(savedLang);};
+
+// Function to simulate a webpage crash effect
+function simulatePageCrash() {
+const body = document.body; 
+const originalContent = body.innerHTML;
+
+// Replace the page content with a "crash" screen
+body.innerHTML = `<div style="
+display: flex;
+flex-direction: column;
+justify-content: center;
+ align-items: center;
+height: 100vh;
+background: #000;
+color: #0f0;
+font-family: monospace;
+font-size: 18px;
+text-align: center;">
+<p>System Error</p>
+<p>Rebooting...</p>
+<div id="loading-bar" style="
+width: 80%;
+height: 10px;
+background: #111;
+border: 1px solid #0f0;
+margin-top: 20px;
+position: relative;">
+        
+<div id="loading-progress" style=" width: 0; height: 100%; background: #0f0; transition: width 0.1s linear;"> </div></div></div>`;
+
+// Simulation of a loading bar
+const loadingProgress = document.getElementById("loading-progress");
+let progress = 0;
+const interval = setInterval(() => {
+progress += 5;
+loadingProgress.style.width = `${progress}%`;
+if (progress >= 100) {clearInterval(interval);
+      
+// Restoring the original content after "reboot"
+setTimeout(() => {body.innerHTML = originalContent;
+setLanguage(localStorage.getItem("preferredLanguage") || "en");
+startReadingTimer();}, 1000);}}, 100);}
+
+window.onload = function () {const savedLang = localStorage.getItem("preferredLanguage") || "en";
+setLanguage(savedLang);
+startReadingTimer();
+
+// Trigger the crash effect every 1 minute
+setInterval(() => {
+simulatePageCrash();}, 60000);};
+let secondsPassed = 0;
+
+// Function to start the reading timer
+function startReadingTimer() {const timerDisplay = document.getElementById("timer");
+setInterval(() => {secondsPassed++;
+const minutes = String(Math.floor(secondsPassed / 60)).padStart(2, '0');
+const seconds = String(secondsPassed % 60).padStart(2, '0');
+timerDisplay.textContent = ` ${minutes}:${seconds}`;}, 1000);}
+
+// Function to show hints and subtly distort text
+const hints = {
+  en: "If the article was interesting, you can find all the useful information by scrolling to the very bottom.",
+  ru: "Если статья была интересной, вы можете найти всю полезную информацию, прокрутив до самого низа.",
+  sk: "Ak bol článok zaujímavý, všetky užitočné informácie nájdete posunutím na úplný spodok.",
+  sa: "यदि लेख रोचक था, तो आप सभी उपयोगी जानकारी को सबसे नीचे स्क्रॉल करके पा सकते हैं।"};
+
+let originalText = "";
+let intervalId = null;
+let modified = false;
+
+document.getElementById("hint-icon").addEventListener("click", () => {const lang = document.documentElement.lang || "en";
+document.getElementById("hint-text").textContent = hints[lang] || hints.en;
+document.getElementById("hint-box").style.display = "block";
+
+const p = document.getElementById("chapter2Text");if (!modified) {originalText = p.textContent; subtlyDistort(p); modified = true;}});
+
+function closeHint() {document.getElementById("hint-box").style.display = "none";
+const p = document.getElementById("chapter2Text");
+clearInterval(intervalId);
+if (modified) {p.textContent = originalText; modified = false;}}
+
+// Function to subtly distort text
+function subtlyDistort(element) {const chars = "!@#$%^&*()_+=-~<>?/[]{}|\\";
+let iterations = 0;
+intervalId = setInterval(() => {const words = originalText.split(" ");
+const distorted = words.map(word => {
+if (Math.random() < 0.1) { const idx = Math.floor(Math.random() * word.length);
+const char = chars[Math.floor(Math.random() * chars.length)];
+return word.substring(0, idx) + char + word.substring(idx + 1);}
+return word;});
+element.textContent = distorted.join(" ");
+ iterations++;
+if (iterations > 2) {clearInterval(intervalId);}}, 700);}
+
+
+  document.querySelectorAll("img").forEach(img => {
+    img.style.cursor = "zoom-in";
+    img.addEventListener("click", () => {
+      const modal = document.getElementById("imgModal");
+      modal.querySelector("img").src = img.src;
+      modal.style.display = "flex";
+    });
+  });
+</script>
+
+</script>
+
+<footer>
+
+<p><a href="../index.html">Back to Projects</a></p>
+<p class="blinking-text">© 2025 V.Y. Worldwide</p>
+
+</footer>
+
+</body>
+
+</html>
