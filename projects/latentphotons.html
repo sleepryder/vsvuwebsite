@@ -198,6 +198,17 @@
 
 <body>
 
+  <!-- div semitransparent overlay -->
+  <div id="overlay" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  z-index: 999;"></div>
+
   <div id="imgModal" class="img-modal" onclick="this.style.display='none'">
     <img src="" alt="preview">
   </div>
@@ -532,6 +543,7 @@
 
     function showWebcamAndAnnotations() {
       document.getElementById('webcam-container').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
       const video = document.getElementById('webcam');
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
