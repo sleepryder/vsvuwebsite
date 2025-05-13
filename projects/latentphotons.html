@@ -184,6 +184,10 @@ footer a:hover {
     }
   </style>
 
+  <script>  
+        let is_webcam_active = false;
+  </script>
+
 </head>
 
 
@@ -469,12 +473,6 @@ style="font-size: 1.1em; color: #555; margin-bottom: 20px;">What is the speed of
 
 <!-- I was trying to hide the webcam container until the correct answer was given, so the annotation is from the right side and the webcam from the left, but it was not working cause of the display "none" property. Idk how to fix it! -->
 
-<script>
-  function handleAnswer(answer) {
-    if (answer === 'correct') {document.getElementById('webcam-container').style.display = 'flex';} 
-    else {document.getElementById('webcam-container').style.display = 'none';}} 
-</script>
-
 <!-- Webcam + Annotation -->
 
 <div id="webcam-container" style="
@@ -555,7 +553,7 @@ style="font-size: 1.1em; color: #555; margin-bottom: 20px;">What is the speed of
 
 <script>
   function handleAnswer(answer) {
-    if (answer === 'correct') {document.getElementById('final-test').style.display = 'none'; showWebcamAndAnnotations();} 
+    if (answer === 'correct') {document.getElementById('final-test').style.display = 'none'; is_webcam_active = true; showWebcamAndAnnotations();} 
     else {alert("Try again.");}
   }
 
@@ -654,6 +652,11 @@ style="font-size: 1.1em; color: #555; margin-bottom: 20px;">What is the speed of
 
 // Function to simulate a webpage crash effect
 function simulatePageCrash() {
+  if (is_webcam_active) {
+    // If the webcam is active, do not trigger the crash
+    return;
+  }
+
 const body = document.body; 
 const originalContent = body.innerHTML;
 
