@@ -538,6 +538,7 @@
         .then(stream => { video.srcObject = stream; })
         .catch(err => { console.error("Webcam error:", err); alert("Unable to access webcam."); });
       } else { alert("Webcam not supported."); }
+      changeLanguage('en');
     }
 
     function changeLanguage(lang) {
