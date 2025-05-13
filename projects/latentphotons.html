@@ -395,9 +395,9 @@
   <script>
     function updateGlossaryLanguage(lang) {
       const glossaryTitle = document.getElementById("glossary-title");
-      glossaryTitle.textContent = glossaryTitle.getAttribute(`data-lang-${lang}`) || glossaryTitle.getAttribute("data-lang-en");
+      glossaryTitle.innerHTML = glossaryTitle.getAttribute(`data-lang-${lang}`) || glossaryTitle.getAttribute("data-lang-en");
       const glossaryItems = document.querySelectorAll("#glossary-list li strong, #glossary-list li span");
-      glossaryItems.forEach(item => { item.textContent = item.getAttribute(`data-lang-${lang}`) || item.getAttribute("data-lang-en"); });
+      glossaryItems.forEach(item => { item.innerHTML = item.getAttribute(`data-lang-${lang}`) || item.getAttribute("data-lang-en"); });
     }
   </script>
 
@@ -542,8 +542,8 @@
     function changeLanguage(lang) {
       const annotationText = document.getElementById('annotation-text');
       const annotationDetails = document.getElementById('annotation-details');
-      annotationText.textContent = annotationText.getAttribute(`data-lang-${lang}`) || annotationText.getAttribute('data-lang-en');
-      annotationDetails.textContent = annotationDetails.getAttribute(`data-lang-${lang}`) || annotationDetails.getAttribute('data-lang-en');
+      annotationText.innerHTML = annotationText.getAttribute(`data-lang-${lang}`) || annotationText.getAttribute('data-lang-en');
+      annotationDetails.innerHTML = annotationDetails.getAttribute(`data-lang-${lang}`) || annotationDetails.getAttribute('data-lang-en');
     }
 
   </script>
@@ -556,7 +556,7 @@
         date: "February - May | 2025",
         description: "Fragment of an internal memorandum from the Paris Observatory (circa 1932 / discovered in 2025)",
         chapter1: "Chapter 1: Light as Witness",
-        chapter1Text: "In December 1931, in one of the forgotten basements of the astronomical complex on the outskirts of Paris, a sequence of silver-based exposures was discovered. These were daguerreotype plates with no signatures or context. They were stored in a faded wrapper, behind a false panel inscribed with 'Nulla Utilitas,' which translates as 'Without use.' The Paris Observatory, founded in 1667 at the initiative of Louis XIV and the first members of the French Academy of Sciences, remained one of the world's leading centers of astronomical research for centuries. It was here in the 19th century that one of the first global projects, the Carte du Ciel (Map of the Sky), was created, uniting astronomers worldwide in an ambitious attempt to catalog millions of stars using the latest photometric methods of the time. Since 1919, the International Time Bureau (Bureau International de l'Heure), coordinating global time tracking based on astronomical observations, was housed within the observatory. However, by the early 1930s, the Paris Observatory was experiencing difficult times. The global economic depression, the aftermath of World War I, and the technological shift toward radio observations led to reduced funding for traditional optical programs. Many archival data, instruments, and experimental materials were abandoned or sent to basements awaiting better times. It was in one of these storage areas that the mysterious plates were found. Alongside them were charred spectrometer lenses, old records of astronomical observations, and handwritten maps of nebulae attributed to Caroline Herschel, a prominent female astronomer of the 18th century. The images themselves faintly revealed flares, distortions, and fragments of light structures that defied direct interpretation. What exactly prompted the creators of these plates to work in secrecy remains unknown. Perhaps these were the results of experiments deemed too speculative for official science at the time. Or perhaps they were byproducts of lost research that was ahead of its time.",
+        chapter1Text: "In December 1931, in one of the forgotten basements of the astronomical complex on the outskirts of Paris, a sequence of silver-based exposures was discovered. These were daguerreotype plates with no signatures or context. They were stored in a faded wrapper, behind a false panel inscribed with 'Nulla Utilitas,' which translates as '<a href=\"http://google.com\" target=\"_blank\">Without use</a>.' The Paris Observatory, founded in 1667 at the initiative of Louis XIV and the first members of the French Academy of Sciences, remained one of the world's leading centers of astronomical research for centuries. It was here in the 19th century that one of the first global projects, the Carte du Ciel (Map of the Sky), was created, uniting astronomers worldwide in an ambitious attempt to catalog millions of stars using the latest photometric methods of the time. Since 1919, the International Time Bureau (Bureau International de l'Heure), coordinating global time tracking based on astronomical observations, was housed within the observatory. However, by the early 1930s, the Paris Observatory was experiencing difficult times. The global economic depression, the aftermath of World War I, and the technological shift toward radio observations led to reduced funding for traditional optical programs. Many archival data, instruments, and experimental materials were abandoned or sent to basements awaiting better times. It was in one of these storage areas that the mysterious plates were found. Alongside them were charred spectrometer lenses, old records of astronomical observations, and handwritten maps of nebulae attributed to Caroline Herschel, a prominent female astronomer of the 18th century. The images themselves faintly revealed flares, distortions, and fragments of light structures that defied direct interpretation. What exactly prompted the creators of these plates to work in secrecy remains unknown. Perhaps these were the results of experiments deemed too speculative for official science at the time. Or perhaps they were byproducts of lost research that was ahead of its time.",
         chapter2: "Chapter 2: Imprints of Time in Silver",
         chapter2Text: "1. Daguerreotypes and the Temporal Dimensions of Memory The study of daguerreotypes, particularly through the lens of modern technology, unveils new horizons in understanding memory and temporality. Much like the collections of Joseph-Nicolas Delisle (1688–1768), whose archives laid the groundwork for numerous astronomical studies, contemporary archival materials may possess layers of complexity previously unanticipated. Delisle, who amassed scientific works during his travels across Germany and Russia, utilized archival documents not merely as informational sources but as instruments for comprehending cosmic phenomena. His contributions exemplify how archival data can be reinterpreted through novel methodologies—a notion especially pertinent in the analysis of antique daguerreotypes. 2. Infrared Imaging and the Revelation of Hidden Patterns In 2024, employing infrared scanning at a wavelength of 960 nm, researchers detected unusual interference patterns on 19th-century daguerreotypes that defied explanation by traditional methods. These patterns fundamentally challenge established notions of time and the materiality of photography. Previously attributed to chemical degradation or improper exposure, such phenomena are now understood to involve intricate interactions between light and matter. This can be interpreted through the concept of latent photons—energy that potentially transcends conventional temporal constraints. Contemporary theories suggest these patterns may be remnants of extraordinary physical processes, such as coronal mass ejections from solar activity or accretion flows around black holes. 3. Temporal Anomalies and Archival Astrophotography Theories positing that these anomalies are linked to time travel present even deeper implications. In this context, one of my works, titled Optical Error, utilized archival images for asteroid observation. By juxtaposing archival photographs with recent observations, recurring optical effects were identified, interpretable as traces left not only by observable objects but also by concealed, possibly temporal, anomalies. These daguerreotypes may not merely capture the reality of their era but could serve as repositories of information pertaining to parallel timelines or phenomena beyond our perception. psi.edu +1 bibnum.obspm.fr +1 4. Photographic Archives as Portals to Temporal Realms Archival images can thus be envisioned as portals, enabling us to peer not only into the past but also to glimpse traces of the future—potential harbingers of events yet to unfold. This perspective redefines photography as an entity capable of preserving not just moments from the past but also latent images of the future, offering novel insights into optics and the very nature of perception. Within this metaphor, photography transforms from a mere temporal snapshot into a tangible imprint of time itself, encapsulating information that cannot be fabricated—only emulated.",
         chapter3: "Chapter 3: Optical Error: An Asteroid Among Shadows",
@@ -611,17 +611,17 @@
     // Function to set the language and update the text content
     function setLanguage(lang) {
       const data = langData[lang];
-      document.getElementById("title").textContent = data.title;
-      document.getElementById("date").textContent = data.date;
-      document.getElementById("description").textContent = data.description;
-      document.getElementById("chapter1").textContent = data.chapter1;
-      document.getElementById("chapter1Text").textContent = data.chapter1Text;
-      document.getElementById("chapter2").textContent = data.chapter2;
-      document.getElementById("chapter2Text").textContent = data.chapter2Text;
-      document.getElementById("chapter3").textContent = data.chapter3;
-      document.getElementById("chapter3Text").textContent = data.chapter3Text;
-      document.getElementById("chapter4").textContent = data.chapter4;
-      document.getElementById("chapter4Text").textContent = data.chapter4Text;
+      document.getElementById("title").innerHTML = data.title;
+      document.getElementById("date").innerHTML = data.date;
+      document.getElementById("description").innerHTML = data.description;
+      document.getElementById("chapter1").innerHTML = data.chapter1;
+      document.getElementById("chapter1Text").innerHTML = data.chapter1Text;
+      document.getElementById("chapter2").innerHTML = data.chapter2;
+      document.getElementById("chapter2Text").innerHTML = data.chapter2Text;
+      document.getElementById("chapter3").innerHTML = data.chapter3;
+      document.getElementById("chapter3Text").innerHTML = data.chapter3Text;
+      document.getElementById("chapter4").innerHTML = data.chapter4;
+      document.getElementById("chapter4Text").innerHTML = data.chapter4Text;
       localStorage.setItem("preferredLanguage", lang);
     }
     window.onload = function () {
@@ -701,7 +701,7 @@ position: relative;">
         secondsPassed++;
         const minutes = String(Math.floor(secondsPassed / 60)).padStart(2, '0');
         const seconds = String(secondsPassed % 60).padStart(2, '0');
-        timerDisplay.textContent = ` ${minutes}:${seconds}`;
+        timerDisplay.innerHTML = ` ${minutes}:${seconds}`;
       }, 1000);
     }
 
@@ -719,17 +719,17 @@ position: relative;">
 
     document.getElementById("hint-icon").addEventListener("click", () => {
       const lang = document.documentElement.lang || "en";
-      document.getElementById("hint-text").textContent = hints[lang] || hints.en;
+      document.getElementById("hint-text").innerHTML = hints[lang] || hints.en;
       document.getElementById("hint-box").style.display = "block";
 
-      const p = document.getElementById("chapter2Text"); if (!modified) { originalText = p.textContent; subtlyDistort(p); modified = true; }
+      const p = document.getElementById("chapter2Text"); if (!modified) { originalText = p.innerHTML; subtlyDistort(p); modified = true; }
     });
 
     function closeHint() {
       document.getElementById("hint-box").style.display = "none";
       const p = document.getElementById("chapter2Text");
       clearInterval(intervalId);
-      if (modified) { p.textContent = originalText; modified = false; }
+      if (modified) { p.innerHTML = originalText; modified = false; }
     }
 
     // Function to subtly distort text
@@ -746,7 +746,7 @@ position: relative;">
           }
           return word;
         });
-        element.textContent = distorted.join(" ");
+        element.innerHTML = distorted.join(" ");
         iterations++;
         if (iterations > 2) { clearInterval(intervalId); }
       }, 700);
