@@ -24,6 +24,8 @@
       padding: 60px 20px;
     }
 
+
+
     h1 {
       font-size: 2.4em;
       margin-bottom: 10px;
@@ -173,7 +175,23 @@
 
 <body>
 
-  <!-- div semitransparent overlay -->
+  <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); 
+justify-content:center; align-items:center; z-index:10000;">
+
+    <button id="prev"
+      style="position:absolute; left:20px; top:50%; transform:translateY(-50%); font-size:3em; color:#fff; background:none; border:none; cursor:pointer;">‹</button>
+
+    <img id="lightbox-img" src="" alt="Expanded image"
+      style="max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 0 20px rgba(9, 9, 9, 0.5);" />
+
+    <button id="next"
+      style="position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:3em; color:#fff; background:none; border:none; cursor:pointer;">›</button>
+
+    <button id="close"
+      style="position:absolute; top:20px; right:20px; font-size:2.5em; color:#fff; background:none; border:none; cursor:pointer;">×</button>
+  </div>
+
+
   <div id="overlay" style="
   position: fixed;
   top: 0;
@@ -195,8 +213,6 @@
     <!-- <button onclick="setLanguage('sa')">SA</button> -->
   </div>
 
-  <!-- Timer at the top right corner -->
-
   <div id="timer" style="
   position: fixed;
   top: 10px;
@@ -211,8 +227,6 @@
   opacity: 0.85;">
     00:00
   </div>
-
-  <!-- Hint icon and box at the bottom left corner -->
 
   <div id="hint-icon" style="
   position: fixed;
@@ -263,7 +277,21 @@
   ">Close</button>
   </div>
 
-  <!-- Article content consisted of pictures and text -->
+  <style>
+    @keyframes flicker {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
 
   <div class="project-container">
 
@@ -274,64 +302,84 @@
     <p id="description"></p>
 
     <div class="project-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/mirrorcode3.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/mirrorcode3.jpg" />
+      <img alt="Glass Plate 1" src="../img/latentphotons/mirrorcode2.jpg" />
+    </div>
+    <div class="project-img">
+      <img src="../img/latentphotons/mirrorcode3.jpg" alt="Glass Plate 2">
+      <figcaption data-lang-en="Fig. 1-2 – Optical interference on glass plate, scanned at 960nm."
+        data-lang-ru="Рис. 1-2 – Оптическая интерференция на стеклянной пластине, сканирование при 960 нм."
+        data-lang-sk="Obr. 1-2 – Optická interferencia na sklenenej platni, skenovanie pri 960 nm." class="caption">Fig.
+        1-2 – Optical interference on glass plate, scanned at 960nm.</figcaption>
     </div>
 
     <h2 id="chapter1"></h2>
     <p id="chapter1Text"></p>
     <div class="project-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/lense.gif" />
+      <img alt="Lense Movements 1" src="../img/latentphotons/lense.gif" />
     </div>
     <div class="gallery-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/screen2.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/glass3.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/screen4.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/screen3.jpg" />
+      <img alt="Screen Observation 1" src="../img/latentphotons/screen2.jpg" />
+      <img alt="Screen Observation 2" src="../img/latentphotons/glass3.jpg" />
+      <img alt="Screen Observation 3" src="../img/latentphotons/screen4.jpg" />
+      <img alt="Screen Observation 4" src="../img/latentphotons/screen3.jpg" />
     </div>
     <div class="project-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/ryba3.gif" />
+      <img src="../img/latentphotons/ryba3.gif" alt="Fish Observation 1">
+      <figcaption
+        data-lang-en="Fig. 3-7 – Digital enhancement of an archival projection plate, revealing latent image traces."
+        data-lang-ru="Рис. 3-7 – Цифровая обработка архивной проекционной пластины, выявляющая латентные следы изображения."
+        data-lang-sk="Obr. 3-7 – Digitálne zvýraznenie archívnej projekčnej platne odhaľujúce latentné stopy obrazu."
+        class="caption">Fig. 3-7 – Digital enhancement of an archival projection plate, revealing latent image traces.
+      </figcaption>
     </div>
-
     <h2 id="chapter2"></h2>
     <p id="chapter2Text"></p>
     <div class="project-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/lense1.gif" />
+      <img alt="Touchdesigner 1" src="../img/latentphotons/lense1.gif" />
+      <figcaption
+        data-lang-en="Fig. 8-12 – Conceptual visualization of wormhole geometry based on archival distortions."
+        data-lang-ru="Рис. 8-12 – Концептуальная визуализация геометрии кротовой норы, основанная на архивных искажениях."
+        data-lang-sk="Obr. 8-12 – Koncepčná vizualizácia geometrie červej diery založená na archívnych deformáciách."
+        class="caption">Fig. 8-12 – Conceptual visualization of wormhole geometry based on archival distortions.
+      </figcaption>
     </div>
     <div class="gallery-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/wormhole.gif" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/wormhole2.gif" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/wormhole4.gif" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/wormhole3.gif" />
+      <img alt="Touchdesigner 2" src="../img/latentphotons/wormhole.gif" />
+      <img alt="Touchdesigner 3" src="../img/latentphotons/wormhole2.gif" />
+      <img alt="Touchdesigner 4" src="../img/latentphotons/wormhole4.gif" />
+      <img alt="Touchdesigner 5" src="../img/latentphotons/wormhole3.gif" />
     </div>
-
     <h2 id="chapter3"></h2>
     <p id="chapter3Text"></p>
-    <div class="gallery-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/wormhole5.png"/>
-      <img alt="Glass Plate 1" src="../img/latentphotons/spekt1.gif"/>
+    <div class="project-img">
+      <img src="../img/latentphotons/wormhole5.png" alt="Cracked archival glass plate">
+      <figcaption
+        data-lang-en="Fig. 13 – Microscopic scan of a cracked silver-nitrate plate, possibly affected by time-shift phenomena."
+        data-lang-ru="Рис. 13 – Микроскан повреждённой серебряно-нитратной пластины, возможно затронутой временными аномалиями."
+        data-lang-sk="Obr. 13 – Mikroskopické skenovanie poškodenej platne so strieborným nitrátom, pravdepodobne ovplyvnenej časovou anomáliou."
+        class="caption">Fig. 13 – Microscopic scan of a cracked silver-nitrate plate, possibly affected by time-shift
+        phenomena.
+      </figcaption>
     </div>
-
     <h2 id="chapter4"></h2>
     <p id="chapter4Text"></p>
 
     <div class="project-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/100112.jpg" />
+      <img alt="Touchdesigner 6" src="../img/latentphotons/100112.jpg" />
+      <figcaption
+        data-lang-en="Fig. 14-18 – Burned spectrometer lens recovered from Meudon archive. Damage suggests exposure to intense radiation."
+        data-lang-ru="Рис. 14-18 – Сожжённая линза спектрометра из архива Мёдона. Повреждение указывает на воздействие интенсивного излучения."
+        data-lang-sk="Obr. 14-18 – Spálená šošovka spektrometra z archívu Meudon. Poškodenie naznačuje vystavenie intenzívnemu žiareniu."
+        class="caption">Fig. 14-18 – Burned spectrometer lens recovered from Meudon archive. Damage suggests exposure to
+        intense radiation.</figcaption>
     </div>
     <div class="gallery-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/glass.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/glass1.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/glass2.jpg" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/10012.jpg" />
+      <img alt="Polaroid 1" src="../img/latentphotons/glass.jpg" />
+      <img alt="Lense 1" src="../img/latentphotons/glass1.jpg" />
+      <img alt="Lense 2" src="../img/latentphotons/glass2.jpg" />
+      <img alt="Lense 3" src="../img/latentphotons/10012.jpg" />
     </div>
-
-    <!-- <div class="gallery-img">
-      <img alt="Glass Plate 1" src="../img/latentphotons/rainbow.gif" />
-      <img alt="Glass Plate 1" src="../img/latentphotons/chips.jpg" />
-    </div> -->
   </div>
-
-  <!-- Final test section consisted of three questions with one correct answer, webcam, and annotation  -->
 
   <div id="final-test" style="
   text-align: center;  
@@ -344,28 +392,27 @@
   margin-right: auto; 
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);">
 
-    <h2 data-lang-en="И потому остаётся открытым вопрос:" data-lang-ru="And so, the question remains open:" data-lang-sk="A tak zostáva otvorená otázka:"
-      style="font-size: 1.5em; color: #333; margin-bottom: 20px;">And so, the question remains open:
+    <h2 data-lang-en="И потому остаётся открытым вопрос:" data-lang-ru="And so, the question remains open:"
+      data-lang-sk="A tak zostáva otvorená otázka:" style="font-size: 1.5em; color: #333; margin-bottom: 20px;">And so,
+      the question remains open:
     </h2>
 
-    <p data-lang-en="What is the speed of light?" data-lang-ru="Какова скорость света?"
-      data-lang-sk="Aká je rýchlosť svetla?" style="font-size: 1.1em; color: #555; margin-bottom: 20px;">Are these images truly records of the past?
-    </p>
-
-    <div style="display: flex; justify-content: center; gap: 10px;">
+    <!-- <div style="display: flex; justify-content: center; gap: 10px;">
       <button onclick="handleAnswer('wrong')" data-lang-en="Or merely the traces of an observer?" data-lang-ru="Или это лишь следы наблюдателя?" data-lang-sk="Alebo sú to len stopy pozorovateľa?"
         style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
         Or merely the traces of an observer?
-      </button>
-      <button onclick="handleAnswer('correct')" data-lang-en="Empty structures waiting for meaning?" data-lang-ru="Пустые структуры, ожидающие наполнения смыслом?" data-lang-sk="Prázdne štruktúry čakajúce na význam?"
-        style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
-        Empty structures waiting for meaning?
-      </button>
-      <button onclick="handleAnswer('wrong')" data-lang-en="Or... a premonition of something we do not yet know?" data-lang-ru="Или… предвестие чего-то, что нам ещё не ведомо?" data-lang-sk="Alebo… predzvesť niečoho, čo ešte nepoznáme?"
+      </button> -->
+    <button onclick="handleAnswer('correct')" data-lang-en="Are these images truly records of the past?"
+      data-lang-ru="Являются ли эти изображения действительно записями прошлого?"
+      data-lang-sk="Sú tieto obrazy skutočne záznamom minulosti?"
+      style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
+      Are these images truly records of the past?
+    </button>
+    <!-- <button onclick="handleAnswer('wrong')" data-lang-en="Or... a premonition of something we do not yet know?" data-lang-ru="Или… предвестие чего-то, что нам ещё не ведомо?" data-lang-sk="Alebo… predzvesť niečoho, čo ešte nepoznáme?"
         style="padding: 10px 20px; background: #eee; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; font-family: inherit; transition: background 0.3s;">
         Or... a premonition of something we do not yet know?
-      </button>
-    </div>
+      </button> -->
+  </div>
   </div>
 
   <!-- I was trying to hide the webcam container until the correct answer was given, so the annotation is from the right side and the webcam from the left, but it was not working cause of the display "none" property. Idk how to fix it! -->
@@ -402,19 +449,31 @@
     color: #fff;
     font-family: Georgia, serif;
     line-height: 1.4;
-    text-align: left;
+    text-align: center;
     background: #111;
     border: 1px solid #444;
     padding: 10px;
     border-radius: 8px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);">
 
+      <button onclick="goBack()" style="
+margin-top: 10px;
+margin-bottom: 20px;
+background: #eee;
+padding: 6px 12px;
+border-radius: 8px;
+border: 1px solid #aaa;
+cursor: pointer;
+font-family: inherit;
+">
+        ⬅ Back
+      </button>
+
       <p style="margin-top: 0; font-size: 1em;">Annotation</p>
 
-      <p id="annotation-text" 
-      data-lang-en="This is your webcam feed. Observe the light and its properties."
-      data-lang-ru="Это ваша веб-камера. Наблюдайте за светом и его свойствами."
-      data-lang-sk="Toto je váš webový prenos. Pozorujte svetlo a jeho vlastnosti." style="margin-bottom: 10px;">This
+      <p id="annotation-text" data-lang-en="This is your webcam feed. Observe the light and its properties."
+        data-lang-ru="Это ваша веб-камера. Наблюдайте за светом и его свойствами."
+        data-lang-sk="Toto je váš webový prenos. Pozorujte svetlo a jeho vlastnosti." style="margin-bottom: 10px;">This
         is your webcam feed. Observe the light and its properties.
       </p>
 
@@ -422,7 +481,6 @@
         style="font-weight: bold;">Latent Photons</span>
 
       <p id="annotation-details"
-
         data-lang-en="«Latent Photons» is a fictional concept created as part of an art research project in the summer term of 2025. 
         The project masquerades as an academic research paper, constructed from open sources and pseudo-academic logic. Through
         the format of a fictional scholarly article, I explore how, in the internet age, popular science texts, media, and visual cultures 
@@ -432,8 +490,7 @@
         language, visual forms, and the structure of information presentation affect trust, memory, and the perception of scientific truth. 
         The project questions the boundaries between truth and fiction, revealing cognitive and sensory mechanisms of perception in 
         digital and analog hyperreality. The site is programmed by me and stylistically references the interfaces of NASA, the Paris 
-        Observatory and other academic platforms. The text itself is inspired by the scientific illustration style and visuals of science fiction." 
-
+        Observatory and other academic platforms. The text itself is inspired by the scientific illustration style and visuals of science fiction."
         data-lang-ru=" «Латентные фотоны» - это вымышленная концепция, созданная в рамках художественного исследовательского проекта 
         в летнем семестре 2025 года. Проект маскируется под академическую научную статью, построенную на основе открытых источников и 
         псевдоакадемической логики. В формате вымышленной научной статьи я исследую, как в эпоху интернета научно-популярные тексты, 
@@ -444,8 +501,7 @@
         восприятие научной истины. Проект ставит под сомнение границы между правдой и вымыслом, раскрывая когнитивные и сенсорные 
         механизмы восприятия в цифровой и аналоговой гиперреальности. Сайт запрограммирован мной и стилистически отсылает к интерфейсам
         NASA, Парижской обсерватории и других академических платформ. Сам текст вдохновлен стилем научных иллюстраций и визуальными образами научной фантастики."
-        
-        data-lang-sk="«Latentné fotóny» je fiktívny koncept vytvorený v rámci umeleckého výskumu projektu v letnom semestri v  
+        data-lang-sk="«Latentné fotóny» je fiktívny koncept vytvorený v rámci umeleckého výskumu v letnom semestri v  
         roku 2025. Projekt sa maskuje ako akademická výskumná práca, zostavená z otvorených zdrojov a pseudoakademickej logiky.
         Prostredníctvom formátu fiktívneho vedeckého článku skúmam, ako v internetovom veku populárno-vedecké texty, médiá a vizuálne 
         kultúry formujú vnímanie reality - alebo logiku jej konštrukcie - často bez dostatočného zdôvodnenia. Projekt vychádza z mojich 
@@ -480,11 +536,9 @@
       const video = document.getElementById('webcam');
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => { video.srcObject = stream; })
-        .catch(err => { console.error("Webcam error:", err); alert("Unable to access webcam."); });
+          .then(stream => { video.srcObject = stream; })
+          .catch(err => { console.error("Webcam error:", err); alert("Unable to access webcam."); });
       } else { alert("Webcam not supported."); }
-      // Set the initial language to English in the annotation
-      // @todo: Change this to the current language
       changeLanguage('en');
     }
 
@@ -496,6 +550,7 @@
     }
 
   </script>
+
 
   <script>
     const langData = {
@@ -557,7 +612,6 @@
       // }
     };
 
-    // Function to set the language and update the text content
     function setLanguage(lang) {
       const data = langData[lang];
       document.getElementById("title").innerHTML = data.title;
@@ -578,17 +632,24 @@
       setLanguage(savedLang);
     };
 
-    // Function to simulate a webpage crash effect
+    function goBack() {
+      document.getElementById('webcam-container').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('hint-box').style.display = 'none';
+      document.getElementById('hint-text').innerHTML = '';
+      is_webcam_active = false;
+    }
+
+
     function simulatePageCrash() {
       if (is_webcam_active) {
-        // If the webcam is active, do not trigger the crash
         return;
       }
 
       const body = document.body;
       const originalContent = body.innerHTML;
 
-      // Replace the page content with a "crash" screen
+
       body.innerHTML = `<div style="
 display: flex;
 flex-direction: column;
@@ -612,7 +673,7 @@ position: relative;">
         
 <div id="loading-progress" style=" width: 0; height: 100%; background: #0f0; transition: width 0.1s linear;"> </div></div></div>`;
 
-      // Simulation of a loading bar
+      
       const loadingProgress = document.getElementById("loading-progress");
       let progress = 0;
       const interval = setInterval(() => {
@@ -621,7 +682,7 @@ position: relative;">
         if (progress >= 100) {
           clearInterval(interval);
 
-          // Restoring the original content after "reboot"
+          
           setTimeout(() => {
             body.innerHTML = originalContent;
             setLanguage(localStorage.getItem("preferredLanguage") || "en");
@@ -636,14 +697,15 @@ position: relative;">
       setLanguage(savedLang);
       startReadingTimer();
 
-      // Trigger the crash effect every 1 minute
       setInterval(() => {
         simulatePageCrash();
-      }, 60000);
+      }, 180000);
     };
     let secondsPassed = 0;
 
-    // Function to start the reading timer
+    function resetReadingTimer() {
+      secondsPassed = 0;
+    }
     function startReadingTimer() {
       const timerDisplay = document.getElementById("timer");
       setInterval(() => {
@@ -654,12 +716,11 @@ position: relative;">
       }, 1000);
     }
 
-    // Function to show hints and subtly distort text
     const hints = {
-      en: "If the article was interesting, you can find all the useful information by scrolling to the very bottom.",
-      ru: "Если статья была интересной, вы можете найти всю полезную информацию, прокрутив до самого низа.",
-      sk: "Ak bol článok zaujímavý, všetky užitočné informácie nájdete posunutím na úplný spodok.",
-      sa: "यदि लेख रोचक था, तो आप सभी उपयोगी जानकारी को सबसे नीचे स्क्रॉल करके पा सकते हैं।"
+      en: "You can find all the useful information by scrolling to the very bottom.",
+      ru: "Вы можете найти всю полезную информацию, прокрутив до самого низа.",
+      sk: "Všetky užitočné informácie nájdete posunutím na úplný spodok.",
+      // sa: "यदि लेख रोचक था, तो आप सभी उपयोगी जानकारी को सबसे नीचे स्क्रॉल करके पा सकते हैं।"
     };
 
     let originalText = "";
@@ -701,7 +762,6 @@ position: relative;">
       }, 700);
     }
 
-
     document.querySelectorAll("img").forEach(img => {
       img.style.cursor = "zoom-in";
       img.addEventListener("click", () => {
@@ -710,6 +770,71 @@ position: relative;">
         modal.style.display = "flex";
       });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Select **all** images on the page
+      const galleryItems = Array.from(document.querySelectorAll('img'));
+
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      const closeBtn = document.getElementById('close');
+
+      let currentIndex = 0;
+
+      function showLightbox(index) {
+        currentIndex = index;
+        lightboxImg.src = galleryItems[currentIndex].src;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+
+      function hideLightbox() {
+        lightbox.style.display = 'none';
+        lightboxImg.src = '';
+        document.body.style.overflow = ''; // restore scroll
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % galleryItems.length;
+        lightboxImg.src = galleryItems[currentIndex].src;
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+        lightboxImg.src = galleryItems[currentIndex].src;
+      }
+
+      // Open lightbox on any image click
+      galleryItems.forEach((img, index) => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => {
+          showLightbox(index);
+        });
+      });
+
+
+      // Navigation buttons
+      prevBtn.addEventListener('click', showPrev);
+      nextBtn.addEventListener('click', showNext);
+      closeBtn.addEventListener('click', hideLightbox);
+
+      // Close on background click
+      lightbox.addEventListener('click', e => {
+        if (e.target === lightbox) hideLightbox();
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', e => {
+        if (lightbox.style.display === 'flex') {
+          if (e.key === 'ArrowRight') showNext();
+          if (e.key === 'ArrowLeft') showPrev();
+          if (e.key === 'Escape') hideLightbox();
+        }
+      });
+    });
+
   </script>
 
   </script>
@@ -720,6 +845,7 @@ position: relative;">
     <p class="blinking-text">© 2025 V.Y. Worldwide</p>
 
   </footer>
+
 
 </body>
 
